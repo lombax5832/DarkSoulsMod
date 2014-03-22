@@ -3,6 +3,8 @@ package lombax5832.DarkSouls;
 import lombax5832.DarkSouls.common.CommonProxy;
 import lombax5832.DarkSouls.common.item.ModItems;
 import lombax5832.DarkSouls.lib.ModInfo;
+import lombax5832.DarkSouls.network.PacketPipeline;
+import lombax5832.DarkSouls.network.PacketSpawnParticles;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
@@ -19,19 +21,21 @@ public class DarkSouls {
 	@Instance(ModInfo.modid)
 	public static DarkSouls instance;
 	
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event){
-		
-	}
+	public static final PacketPipeline packetPipeline = new PacketPipeline();
 	
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent event){
+	public void preInit(FMLPreInitializationEvent event){
 		ModItems.initItems();
 	}
 	
 	@Mod.EventHandler
+	public void init(FMLInitializationEvent event){
+		packetPipeline.initialize();
+	}
+	
+	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event){
-		
+		packetPipeline.postInitialize();
 	}
 
 }

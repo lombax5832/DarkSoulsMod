@@ -3,14 +3,16 @@ package lombax5832.DarkSouls.common.item;
 import java.awt.Color;
 import java.util.List;
 
+import lombax5832.DarkSouls.DarkSouls;
 import lombax5832.DarkSouls.client.render.RadialSmokeFX;
 import lombax5832.DarkSouls.lib.ItemProperties;
+import lombax5832.DarkSouls.network.PacketSpawnParticles;
 import lombax5832.DarkSouls.util.Vector;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
@@ -20,8 +22,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Sword extends ItemSword{
 
@@ -56,45 +58,31 @@ public class Sword extends ItemSword{
         		x /= length * 1;
                 y /= length * 1;
                 z /= length * 1;
-
+                
                 player.moveEntity(x, y, z);
-                if(length<1){
+                if((player.getDistance(current.posX, current.posY+current.getEyeHeight(), current.posZ))<1){
                 	double xKnockback = 0;
                 	double zKnockback = 0;
-                	if(x>0){
-                		xKnockback = -2;
-                	}else{
-                		xKnockback = 2;
-                	}
-                	if(z>0){
-                		zKnockback = -2;
-                	}else{
-                		zKnockback = 2;
-                	}
                 	current.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) player), ItemProperties.ABYSS_HOMING_HIT_DAMAGE);
-                	current.knockBack(player, 0F, xKnockback, zKnockback);
+                	current.knockBack(player, 0F, -x, -z);
                 	par1ItemStack.damageItem(ItemProperties.ABYSS_HOMING_DAMAGE, (EntityLivingBase) player);
                 	homing = false;
+                	current = null;
+                	DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY-player.getEyeHeight(), player.posZ, distance, Color.BLACK, 100), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
                 	
                 }
                 timeoutTimer++;
-        	}else{
+        	}
+			if(timeoutTimer>homingTimeout){
         		timeoutTimer=0;
         		homing=false;
         		current=null;
-        		
-        	}
-			for(int i =0;i<20;i++){
-				double xDisplacement = Math.random() - 0.5;
-				double zDisplacement = Math.random() - 0.5;
-				Vector v = new Vector(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
-                v.normalize();
-                if(Side.CLIENT.isClient()){
-	                RadialSmokeFX fx = new RadialSmokeFX(par2World, v.x * distance + player.prevPosX + xDisplacement, v.y * (distance + .5) + player.prevPosY, v.z * distance + player.prevPosZ + zDisplacement, Color.BLACK, (EntityPlayer) player);
-	                Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-                }
-//                System.out.println("X: "+(int)(v.x * distance + player.prevPosX)+"Y: "+(int)(v.y * (distance + .5) + player.prevPosY)+"Z: "+(int)(v.z * distance + player.prevPosZ)); 
 			}
+			if(current!=null){
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY-1, player.posZ, distance, Color.BLACK, 20), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+			}
+		}else if(player.isSprinting()){
+			DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY-1, player.posZ, distance, Color.BLACK, 3), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
 		}
 	}
 	
@@ -110,7 +98,7 @@ public class Sword extends ItemSword{
         	speedEffect = new PotionEffect(Potion.jump.id, ItemProperties.ABYSS_JUMP_DURATION, ItemProperties.ABYSS_JUMP_AMP);
         	damageToDo = ItemProperties.ABYSS_JUMP_DAMAGE;
         }
-        par1ItemStack.damageItem(damageToDo, player);
+        subtractItemDamage(par1ItemStack,damageToDo);
         if(speedEffect != null){
         	player.addPotionEffect(speedEffect);
         }
@@ -132,12 +120,17 @@ public class Sword extends ItemSword{
         				minDisSq = e.getDistanceSqToEntity(player);
         			}
         		}
-        	}
-        	
+        	}       	
         }
-        
         return par1ItemStack;
-        
     }
+	
+	public void subtractItemDamage(ItemStack stack, int damage){
+		stack.setItemDamage(stack.getItemDamage()-damage);
+	}
+	
+	public void addItemDamge(ItemStack stack, int damage){
+		stack.setItemDamage(stack.getItemDamage()+damage);
+	}
 	
 }

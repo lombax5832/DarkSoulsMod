@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class RadialSmokeFX extends EntityFX{
     private Vector v;
     float smokeParticleScale;
@@ -70,7 +69,6 @@ public class RadialSmokeFX extends EntityFX{
         double x = origX - posX;
 		double y = origY - posY;
 		double z = origZ - posZ;
-		System.out.println("Xmove: "+(x)+" Ymove: "+(y)+" Zmove: "+(z));
 		double length = Math.sqrt(x * x + y * y + z * z);
 		
 		x /= length * 20;
@@ -78,9 +76,6 @@ public class RadialSmokeFX extends EntityFX{
         z /= length * 20;
         
     	moveEntity(-x, -y, -z);
-
-//        System.out.println("X: "+(int)(posX)+"Y: "+(int)(posY)+"Z: "+(int)(posZ));
-//        System.out.println("origX: "+(int)(origX)+"origY: "+(int)(origY)+"origZ: "+(int)(origZ)); 
         
         
         if (particleAge++ >= particleMaxAge) {
