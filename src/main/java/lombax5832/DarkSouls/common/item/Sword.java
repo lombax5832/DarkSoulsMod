@@ -27,10 +27,11 @@ import cpw.mods.fml.relauncher.Side;
 
 public class Sword extends ItemSword{
 
-	EntityLiving current = null;
-	public boolean homing = false;
+	private EntityLiving current = null;
+	private boolean homing = false;
 	public static final int homingTimeout = 60;
 	public static int timeoutTimer = 0;
+	private static double userPrevX, userPrevY, userPrevZ = 0;
 	
 	public Sword(ToolMaterial p_i45356_1_) {
 		super(p_i45356_1_);
@@ -47,42 +48,58 @@ public class Sword extends ItemSword{
 	
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity player, int par4, boolean par5){
-		if(homing){
-			if(current != null && !(timeoutTimer>homingTimeout)){
-        		double x = current.posX - player.posX;
-        		double y = current.posY + current.getEyeHeight() - player.posY;
-        		double z = current.posZ - player.posZ;
-        		
-        		double length = Math.sqrt(x * x + y * y + z * z);
-        		
-        		x /= length * 1;
-                y /= length * 1;
-                z /= length * 1;
-                
-                player.moveEntity(x, y, z);
-                if((player.getDistance(current.posX, current.posY+current.getEyeHeight(), current.posZ))<1){
-                	double xKnockback = 0;
-                	double zKnockback = 0;
-                	current.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) player), ItemProperties.ABYSS_HOMING_HIT_DAMAGE);
-                	current.knockBack(player, 0F, -x, -z);
-                	par1ItemStack.damageItem(ItemProperties.ABYSS_HOMING_DAMAGE, (EntityLivingBase) player);
-                	homing = false;
-                	current = null;
-                	DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY-player.getEyeHeight(), player.posZ, distance, Color.BLACK, 100), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
-                	
-                }
-                timeoutTimer++;
-        	}
-			if(timeoutTimer>homingTimeout){
-        		timeoutTimer=0;
-        		homing=false;
-        		current=null;
+		if(((EntityPlayer)player).getCurrentEquippedItem() !=null && (((EntityPlayer)player).getCurrentEquippedItem().getItem() == par1ItemStack.getItem())){
+			if(homing){
+				if(current != null && !(timeoutTimer>homingTimeout)){
+	        		double x = current.posX - player.posX;
+	        		double y = current.posY + current.getEyeHeight() - player.posY;
+	        		double z = current.posZ - player.posZ;
+	        		
+	        		double length = Math.sqrt(x * x + y * y + z * z);
+	        		
+	        		x /= length * 1;
+	                y /= length * 1;
+	                z /= length * 1;
+	                
+	                player.moveEntity(x, y, z);
+	                if((player.getDistance(current.posX, current.posY+current.getEyeHeight(), current.posZ))<1){
+	                	double xKnockback = 0;
+	                	double zKnockback = 0;
+	                	current.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) player), ItemProperties.ABYSS_HOMING_HIT_DAMAGE);
+	                	current.knockBack(player, 0F, -x, -z);
+	                	par1ItemStack.damageItem(ItemProperties.ABYSS_HOMING_DAMAGE, (EntityLivingBase) player);
+	                	homing = false;
+	                	current = null;
+	                	DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY-player.getEyeHeight(), player.posZ, distance, Color.BLACK, player.getEntityId(), 100), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+	                	
+	                }
+	                timeoutTimer++;
+	        	}
+				if(timeoutTimer>homingTimeout){
+	        		timeoutTimer=0;
+	        		homing=false;
+	        		current=null;
+				}
+				if(current!=null){
+					DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 20), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+				}
+			}else if(player.isSprinting()){
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 4), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+			}else if(player.onGround && entityMoved(player)){
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 3), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
 			}
-			if(current!=null){
-				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY-1, player.posZ, distance, Color.BLACK, 20), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+			else if(player.onGround){
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 1), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+			}else if(player.isAirBorne || !player.onGround){
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 10), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
 			}
-		}else if(player.isSprinting()){
-			DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY-1, player.posZ, distance, Color.BLACK, 3), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+			userPrevX = player.posX;
+			userPrevY = player.posY;
+			userPrevZ = player.posZ;
+		}else{
+			timeoutTimer=0;
+    		homing=false;
+    		current=null;
 		}
 	}
 	
@@ -127,6 +144,16 @@ public class Sword extends ItemSword{
 	
 	public void subtractItemDamage(ItemStack stack, int damage){
 		stack.setItemDamage(stack.getItemDamage()-damage);
+	}
+	
+	public boolean entityMoved(Entity entity){
+		if(entity.posX != userPrevX){
+			return true;
+		}
+		if(entity.posZ != userPrevZ){
+			return true;
+		}
+		return false;
 	}
 	
 	public void addItemDamge(ItemStack stack, int damage){
