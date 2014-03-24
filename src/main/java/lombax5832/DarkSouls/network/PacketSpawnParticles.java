@@ -42,7 +42,7 @@ public class PacketSpawnParticles extends AbstractPacket{
 		buffer.writeDouble(y);
 		buffer.writeDouble(z);
 		buffer.writeInt(parentID);
-		buffer.writeDouble(distance);
+		buffer.writeDouble(distance); 
 		buffer.writeInt(particlesPerTick);
 		ByteBufUtils.writeUTF8String(buffer, Integer.toString(Color.getRGB()));
 	}
