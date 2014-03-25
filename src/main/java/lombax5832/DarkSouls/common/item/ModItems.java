@@ -7,8 +7,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 
 public class ModItems {
+	
+	public static Item AbyssGreatSword;
+	
 	public static void initItems(){
-		Item Swords = new Sword(ToolMaterial.IRON).setTextureName(ModInfo.modid+":"+ItemNames.SWORDS_NAME).setUnlocalizedName(ItemNames.SWORDS_NAME);
-		GameRegistry.registerItem(Swords, ItemNames.SWORDS_NAME);
+		AbyssGreatSword = new AbyssGreatsword(ToolMaterial.IRON).setTextureName(ModInfo.modid+":"+ItemNames.SWORDS_NAME).setUnlocalizedName(ItemNames.SWORDS_NAME);
+		GameRegistry.registerItem(AbyssGreatSword, ItemNames.SWORDS_NAME);
 	}
 }
