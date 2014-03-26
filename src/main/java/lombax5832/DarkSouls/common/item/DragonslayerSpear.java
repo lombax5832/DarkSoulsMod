@@ -10,9 +10,12 @@ import net.minecraft.world.World;
 
 public class DragonslayerSpear extends ItemSword{
 
-	public DragonslayerSpear(ToolMaterial p_i45356_1_) {
+	public float damageVsEntity;
+	
+	public DragonslayerSpear(ToolMaterial p_i45356_1_, float damageVsEntity) {
 		super(p_i45356_1_);
 		this.setCreativeTab(CreativeTabDarkSouls.tabDarkSouls);
+		this.damageVsEntity = damageVsEntity;
 	}
 	
 	@Override
@@ -28,6 +31,10 @@ public class DragonslayerSpear extends ItemSword{
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player){
 		return par1ItemStack;
+	}
+	
+	public float getDamageVsEntity(){
+		return damageVsEntity;
 	}
 
 }

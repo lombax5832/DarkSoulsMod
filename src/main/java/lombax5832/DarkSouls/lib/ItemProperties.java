@@ -17,4 +17,7 @@ public class ItemProperties {
 	public static final int ABYSS_HOMING_HEIGHT = 20;
 	public static final float ABYSS_HOMING_HIT_DAMAGE = 5F;
 	
+	///Epic Sword Settings
+	public static final int EPIC_SWORD_MAX_DAMAGE = 500;
+	public static final float EPIC_SWORD_BASE_DAMAGE = 7F;
 }

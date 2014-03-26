@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.potion.Potion;
@@ -26,7 +27,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 
-public class AbyssGreatsword extends ItemSword{
+public class AbyssGreatsword extends ItemSwordEpic{
 
 	private EntityLiving current = null;
 	private boolean homing = false;
@@ -34,9 +35,18 @@ public class AbyssGreatsword extends ItemSword{
 	public static int timeoutTimer = 0;
 	private static double userPrevX, userPrevY, userPrevZ = 0;
 	
-	public AbyssGreatsword(ToolMaterial p_i45356_1_) {
-		super(p_i45356_1_);
-		this.setCreativeTab(CreativeTabDarkSouls.tabDarkSouls);
+	public AbyssGreatsword() {
+		super();
+	}
+	
+	@Override
+	public void addInformation(ItemStack itemstack, EntityPlayer par2EntityPlayer, List list, boolean par4){
+		super.addInformation(itemstack, par2EntityPlayer, list, par4);
+		list.add("While sprinting, right click to dash.");
+		list.add("While on the ground and not sprinting,");
+		list.add(" right click to gain superjump and no fall damage.");
+		list.add("While in the air, right click to ground slam");
+		list.add(" the nearest enemy under you.");
 	}
 	
 	@Override
@@ -82,17 +92,17 @@ public class AbyssGreatsword extends ItemSword{
 	        		current=null;
 				}
 				if(current!=null){
-					DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 20), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+					DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 20), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 64));
 				}
 			}else if(player.isSprinting()){
-				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 4), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 4), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 64));
 			}else if(player.onGround && entityMoved(player)){
-				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 3), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 3), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 64));
 			}
 			else if(player.onGround){
-				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 1), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 1), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 64));
 			}else if(player.isAirBorne || !player.onGround){
-				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 10), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 100));
+				DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY+1, player.posZ, distance, Color.BLACK, player.getEntityId(), 10), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 64));
 			}
 			userPrevX = player.posX;
 			userPrevY = player.posY;
