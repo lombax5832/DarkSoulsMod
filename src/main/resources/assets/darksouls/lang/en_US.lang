@@ -1,5 +1,6 @@
 //Items
 item.darkSoulsSword.name=Abyss Greatsword
+item.darkSoulsDragonSlayerSpear.name=Dragonslayer Spear
 
 //CreativeTab
 itemGroup.darksouls=Dark Souls

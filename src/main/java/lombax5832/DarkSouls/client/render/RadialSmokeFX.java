@@ -5,10 +5,8 @@ import java.awt.Color;
 import lombax5832.DarkSouls.util.Vector;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class RadialSmokeFX extends EntityFX{
     private Vector v;
@@ -17,10 +15,10 @@ public class RadialSmokeFX extends EntityFX{
     double origY = 0;
     double origZ = 0;
     boolean justSpawned = true;
-    EntityPlayer parent;
+    Entity parent;
     
 	public RadialSmokeFX(World par1World, double xCoord,
-            double yCoord, double zCoord, Color c, EntityPlayer parent) {
+            double yCoord, double zCoord, Color c, Entity parent) {
         super(par1World, xCoord, yCoord, zCoord, 0.0D, 0.0D, 0.0D);
         particleRed = c.getRed() / 255F;
         particleGreen = c.getGreen() / 255F;

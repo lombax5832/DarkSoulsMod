@@ -77,9 +77,9 @@ public class PacketSpawnParticles extends AbstractPacket{
             RadialSmokeFX fx;
             
             if(player == parent){
-            	fx = new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y, v.z * distance + z + zDisplacement, Color.BLACK, (EntityPlayer) parent);
+            	fx = new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y, v.z * distance + z + zDisplacement, Color, parent);
             }else{
-            	fx = new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y-0.5, v.z * distance + z + zDisplacement, Color.BLACK, (EntityPlayer) parent);
+            	fx = new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y-0.5, v.z * distance + z + zDisplacement, Color, parent);
             }
             Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}

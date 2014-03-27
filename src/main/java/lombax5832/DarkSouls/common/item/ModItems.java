@@ -18,10 +18,10 @@ public class ModItems {
 	public static void initItems(){
 		
 		
-		AbyssGreatSword = new AbyssGreatsword().setTextureName(ModInfo.modid+":"+ItemNames.SWORDS_NAME).setUnlocalizedName(ItemNames.SWORDS_NAME);
-		GameRegistry.registerItem(AbyssGreatSword, ItemNames.SWORDS_NAME);
+		AbyssGreatSword = new AbyssGreatsword().setTextureName(ModInfo.modid+":"+ItemNames.ABYSS_SWORD_NAME).setUnlocalizedName(ItemNames.ABYSS_SWORD_NAME);
+		GameRegistry.registerItem(AbyssGreatSword, ItemNames.ABYSS_SWORD_NAME);
 		
-//		DragonslayerSpear = new DragonslayerSpear(ToolMaterial.IRON).setTextureName(ModInfo.modid+":"+ItemNames.SWORDS_NAME).setUnlocalizedName(ItemNames.SWORDS_NAME);
-//		GameRegistry.registerItem(DragonslayerSpear, ItemNames.SWORDS_NAME);
+		DragonslayerSpear = new DragonslayerSpear().setTextureName(ModInfo.modid+":"+ItemNames.DRAGONSLAYER_SPEAR_NAME).setUnlocalizedName(ItemNames.DRAGONSLAYER_SPEAR_NAME);
+		GameRegistry.registerItem(DragonslayerSpear, ItemNames.DRAGONSLAYER_SPEAR_NAME);
 	}
 }
