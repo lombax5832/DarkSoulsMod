@@ -20,6 +20,10 @@ public class DragonslayerSpear extends ItemSwordEpic{
 	private int speedTicker = 0;
 	private final int speedTickerMax = 1;
 	double distance = 0.25;
+	private static double userPrevX, userPrevY, userPrevZ = 0;
+	private int particleOnPlayerTicker,particleOnPlayerSubtractTicker = 0;
+	private final int particleOnPlayerMax = 5;
+	private final int particleOnPlayerSubtractMax = 10;
 	
 	public DragonslayerSpear() {
 		super();
@@ -36,19 +40,37 @@ public class DragonslayerSpear extends ItemSwordEpic{
 			PotionEffect effect = null;
 			int damageToDo;
 			effect=new PotionEffect(Potion.moveSpeed.id, speedTickerMax, ItemProperties.DRAGON_SLAYER_SPEAR_SPEED_AMP);
-			if(effect!=null){
+			if(effect!=null&&player.isSprinting()){
 				if(speedTicker == 0){
 					((EntityLivingBase) player).addPotionEffect(effect);
 				}else if(speedTicker>=speedTickerMax){
 					speedTicker=0;
 				}
 			}
+			if(particleOnPlayerTicker > 0){
+					DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(player.posX, player.posY,player.posZ, distance, Color.YELLOW, player.getEntityId(), particleOnPlayerTicker, true, 6), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 64));
+				}
+			if(player.onGround&&player.isSprinting()){
+				particleOnPlayerTicker = particleOnPlayerMax;
+				particleOnPlayerSubtractTicker = 0;
+			}
+			if(particleOnPlayerTicker<=particleOnPlayerMax&&particleOnPlayerTicker>0){
+				particleOnPlayerSubtractTicker++;
+				if(particleOnPlayerSubtractTicker>=particleOnPlayerSubtractMax){
+					particleOnPlayerTicker--;
+					particleOnPlayerSubtractTicker = 0;
+				}
+			}
 		}
+		
+		userPrevX = player.posX;
+		userPrevY = player.posY;
+		userPrevZ = player.posZ;
 	}
 	
 	@Override
 	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase entityHit, EntityLivingBase userEntity){
-		DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(entityHit.posX, entityHit.posY+2, entityHit.posZ, distance, Color.YELLOW, entityHit.getEntityId(), 50), new TargetPoint(userEntity.dimension, userEntity.posX, userEntity.posY, userEntity.posZ, 64));
+		DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(entityHit.posX, entityHit.posY+entityHit.getEyeHeight(), entityHit.posZ, distance, new Color(255, 128, 0), entityHit.getEntityId(), 50, true, 1.5), new TargetPoint(userEntity.dimension, userEntity.posX, userEntity.posY, userEntity.posZ, 64));
 		return super.hitEntity(par1ItemStack, entityHit, userEntity);
 	}
 	
@@ -59,6 +81,16 @@ public class DragonslayerSpear extends ItemSwordEpic{
 	
 	public boolean playerHoldingItem(EntityPlayer player, ItemStack stack){
 		if(player.getCurrentEquippedItem() != null && (player.getCurrentEquippedItem().getItem() == stack.getItem())){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean entityMoved(Entity entity){
+		if(entity.posX != userPrevX){
+			return true;
+		}
+		if(entity.posZ != userPrevZ){
 			return true;
 		}
 		return false;

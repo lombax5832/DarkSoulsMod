@@ -24,6 +24,9 @@ public class PacketSpawnParticles extends AbstractPacket{
 	private Color Color;
 	private double distance;
 	private int particlesPerTick;
+	private boolean scatter;
+	private double scatterMult;
+	
 	public PacketSpawnParticles(){}
 	
 	public PacketSpawnParticles(double x,double y,double z, double distance, Color Color, int parentID, int particlesPerSec){
@@ -34,6 +37,21 @@ public class PacketSpawnParticles extends AbstractPacket{
 		this.parentID = parentID; 
 		this.Color = Color;
 		this.particlesPerTick = particlesPerSec;
+		this.scatter = false;
+		this.scatterMult = Double.MAX_VALUE;
+		
+	}
+	
+	public PacketSpawnParticles(double x,double y,double z, double distance, Color Color, int parentID, int particlesPerSec, boolean scatter, double scatterMult){
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.distance = distance;
+		this.parentID = parentID; 
+		this.Color = Color;
+		this.particlesPerTick = particlesPerSec;
+		this.scatter = scatter;
+		this.scatterMult = scatterMult;
 	}
 	
 	@Override
@@ -45,6 +63,8 @@ public class PacketSpawnParticles extends AbstractPacket{
 		buffer.writeDouble(distance); 
 		buffer.writeInt(particlesPerTick);
 		ByteBufUtils.writeUTF8String(buffer, Integer.toString(Color.getRGB()));
+		buffer.writeBoolean(scatter);
+		buffer.writeDouble(scatterMult);
 	}
 
 	@Override
@@ -56,6 +76,8 @@ public class PacketSpawnParticles extends AbstractPacket{
 		distance = buffer.readDouble();
 		particlesPerTick = buffer.readInt();
 		Color = new Color(Integer.parseInt(ByteBufUtils.readUTF8String(buffer)));
+		scatter = buffer.readBoolean();
+		scatterMult = buffer.readDouble();
 	}
 
 	@Override
@@ -77,14 +99,18 @@ public class PacketSpawnParticles extends AbstractPacket{
             RadialSmokeFX fx;
             
             if(player == parent){
-            	fx = new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y, v.z * distance + z + zDisplacement, Color, parent);
+            	fx = new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y, v.z * distance + z + zDisplacement, Color, parent, scatter, scatterMult);
             }else{
-            	fx = new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y-0.5, v.z * distance + z + zDisplacement, Color, parent);
+            	fx = new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y-0.5, v.z * distance + z + zDisplacement, Color, parent, scatter, scatterMult);
             }
             Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
 		
 	}
+	
+//	public RadialSmokeFX smokeFx(World par1World, double xCoord, double yCoord, double zCoord, Color c, Entity parent, boolean scatter, double scatterMult, Vector v){
+//		return new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y-0.5, v.z * distance + z + zDisplacement, Color, parent, scatter);;
+//	}
 
 	@Override
 	public void handleServerSide(EntityPlayer player) {

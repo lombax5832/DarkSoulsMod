@@ -15,10 +15,14 @@ public class RadialSmokeFX extends EntityFX{
     double origY = 0;
     double origZ = 0;
     boolean justSpawned = true;
+    boolean scatter = false;
+    double scatterX, scatterY, scatterZ = 0;
+    double scatterMult=1;
+    
     Entity parent;
     
 	public RadialSmokeFX(World par1World, double xCoord,
-            double yCoord, double zCoord, Color c, Entity parent) {
+            double yCoord, double zCoord, Color c, Entity parent, boolean scatter, double scatterMult) {
         super(par1World, xCoord, yCoord, zCoord, 0.0D, 0.0D, 0.0D);
         particleRed = c.getRed() / 255F;
         particleGreen = c.getGreen() / 255F;
@@ -28,6 +32,8 @@ public class RadialSmokeFX extends EntityFX{
         particleMaxAge = 20;
         noClip = true;
         this.parent=parent;
+        this.scatter = scatter;
+        this.scatterMult = scatterMult;
     }
 	
 	@Override
@@ -63,6 +69,11 @@ public class RadialSmokeFX extends EntityFX{
 	        origZ = parent.posZ;
 	        justSpawned=false;
         }
+        if(scatter){
+        	scatterX = (Math.random()/scatterMult)-((1/scatterMult)/2);
+        	scatterY = (Math.random()/scatterMult)-((1/scatterMult)/2);
+        	scatterZ = (Math.random()/scatterMult)-((1/scatterMult)/2);
+        }
         
         double x = origX - posX;
 		double y = origY - posY;
@@ -73,7 +84,7 @@ public class RadialSmokeFX extends EntityFX{
         y /= length * 20;
         z /= length * 20;
         
-    	moveEntity(-x, -y, -z);
+    	moveEntity(-x+scatterX, -y+scatterY, -z+scatterZ);
         
         
         if (particleAge++ >= particleMaxAge) {
