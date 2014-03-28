@@ -70,7 +70,7 @@ public class DragonslayerSpear extends ItemSwordEpic{
 	
 	@Override
 	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase entityHit, EntityLivingBase userEntity){
-		DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(entityHit.posX, entityHit.posY+entityHit.getEyeHeight(), entityHit.posZ, distance, new Color(255, 128, 0), entityHit.getEntityId(), 50, true, 1.5), new TargetPoint(userEntity.dimension, userEntity.posX, userEntity.posY, userEntity.posZ, 64));
+		DarkSouls.packetPipeline.sendToAllAround(new PacketSpawnParticles(entityHit.posX, entityHit.posY+entityHit.getEyeHeight(), entityHit.posZ, distance, Color.YELLOW, entityHit.getEntityId(), 50, true, 1.5), new TargetPoint(userEntity.dimension, userEntity.posX, userEntity.posY, userEntity.posZ, 64));
 		return super.hitEntity(par1ItemStack, entityHit, userEntity);
 	}
 	
