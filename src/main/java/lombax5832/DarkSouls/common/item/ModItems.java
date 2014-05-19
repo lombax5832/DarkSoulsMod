@@ -16,8 +16,6 @@ public class ModItems {
 	public static ToolMaterial POWERWEAPONS_T1 = EnumHelper.addToolMaterial("POWERWEAONS_T1", 2, 400, 6.0F, 2.5F, 14);
 	
 	public static void initItems(){
-		
-		
 		AbyssGreatSword = new AbyssGreatsword().setTextureName(ModInfo.modid+":"+ItemNames.ABYSS_SWORD_NAME).setUnlocalizedName(ItemNames.ABYSS_SWORD_NAME);
 		GameRegistry.registerItem(AbyssGreatSword, ItemNames.ABYSS_SWORD_NAME);
 		
