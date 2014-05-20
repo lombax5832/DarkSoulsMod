@@ -1,6 +1,7 @@
 package lombax5832.DarkSouls;
 
 import lombax5832.DarkSouls.common.CommonProxy;
+import lombax5832.DarkSouls.common.block.ModBlocks;
 import lombax5832.DarkSouls.common.item.ModItems;
 import lombax5832.DarkSouls.lib.ModInfo;
 import lombax5832.DarkSouls.network.PacketPipeline;
@@ -26,6 +27,8 @@ public class DarkSouls {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event){
 		ModItems.initItems();
+		ModBlocks.initBlocks();
+		proxy.registerRenderTickHandler();
 	}
 	
 	@Mod.EventHandler
