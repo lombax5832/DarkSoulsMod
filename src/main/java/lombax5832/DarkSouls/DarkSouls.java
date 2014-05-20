@@ -28,12 +28,13 @@ public class DarkSouls {
 	public void preInit(FMLPreInitializationEvent event){
 		ModItems.initItems();
 		ModBlocks.initBlocks();
-		proxy.registerRenderTickHandler();
 	}
 	
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event){
 		packetPipeline.initialize();
+		proxy.registerRenderTickHandler();
+		proxy.registerEventHandler();
 	}
 	
 	@Mod.EventHandler

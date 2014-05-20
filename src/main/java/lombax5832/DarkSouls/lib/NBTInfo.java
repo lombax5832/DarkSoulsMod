@@ -1,5 +1,7 @@
 package lombax5832.DarkSouls.lib;
 
 public class NBTInfo {
-	public final static String SoulArrow = "darkSoulsHasSoulArrow";
+	public final static String hasSoulArrow 	= "darkSoulsHasSoulArrow";
+	public final static String currentSoulArrow	= "darkSoulsCurrentSoulArrow";
+	public final static String maxSoulArrow 	= "darkSoulsMaxSoulArrow";
 }

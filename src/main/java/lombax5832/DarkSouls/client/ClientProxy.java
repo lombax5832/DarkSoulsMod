@@ -1,8 +1,8 @@
 package lombax5832.DarkSouls.client;
 
-import lombax5832.DarkSouls.client.render.PlayerGUIHandler;
-import lombax5832.DarkSouls.common.CommonProxy;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import lombax5832.DarkSouls.common.CommonProxy;
 
 public class ClientProxy extends CommonProxy{
 	@Override
@@ -12,6 +12,8 @@ public class ClientProxy extends CommonProxy{
 	
 	@Override
     public void registerRenderTickHandler() {
-		MinecraftForge.EVENT_BUS.register(new PlayerGUIHandler());
+//		FMLCommonHandler.instance().bus().register(new PlayerGUIHandler());
+//		new PlayerGUIHandler();
+		MinecraftForge.EVENT_BUS.register(new PlayerSpellsGUI(Minecraft.getMinecraft()));
     }
 }

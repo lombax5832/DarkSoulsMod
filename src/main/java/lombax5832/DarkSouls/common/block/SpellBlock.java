@@ -1,7 +1,7 @@
 package lombax5832.DarkSouls.common.block;
 
+import lombax5832.DarkSouls.common.player.DarkSoulsExtendedPlayer;
 import lombax5832.DarkSouls.creativetab.CreativeTabDarkSouls;
-import lombax5832.DarkSouls.lib.NBTInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +31,16 @@ public class SpellBlock extends Block{
 	            this.thisy = y;
 	            this.thisz = z;
 	            
-	            player.getEntityData().setBoolean(NBTInfo.SoulArrow, true);
+	            if(world.isRemote){
+	            	
+	            	DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(player);
+	            	
+	            	if(player.isSneaking())
+	            		props.setHasSoulArrow(false);
+	            	else
+	            		props.setHasSoulArrow(true);
+	            	
+	            }
 	            
 	            return true;
 	    }
