@@ -24,12 +24,14 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	
 	private boolean hasSoulArrow = false;
 	
-	private int maxSoulArrow,currentSoulArrow = 0;
+	private int currentSoulArrow = 0;
+	
+	private int maxSoulArrow = 10;
 	
 	public DarkSoulsExtendedPlayer(EntityPlayer player){
 		this.player = player;
 		this.hasSoulArrow = false;
-		this.currentSoulArrow = this.maxSoulArrow = 0;
+		this.currentSoulArrow = 0;
 	}
 	
 	public static final void register(EntityPlayer player){
@@ -95,6 +97,14 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	
 	public void setHasSoulArrow(boolean setting){
 		this.hasSoulArrow = setting;
+	}
+	
+	public void setCurrentSoulArrow(int setting){
+		this.currentSoulArrow = setting;
+	}
+	
+	public void setMaxSoulArrow(int setting){
+		this.maxSoulArrow = setting;
 	}
 
 }

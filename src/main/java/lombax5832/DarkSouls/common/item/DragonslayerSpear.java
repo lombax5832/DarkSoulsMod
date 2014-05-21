@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import lombax5832.DarkSouls.DarkSouls;
+import lombax5832.DarkSouls.common.player.DarkSoulsExtendedPlayer;
 import lombax5832.DarkSouls.lib.ItemProperties;
 import lombax5832.DarkSouls.network.PacketSpawnParticles;
 import net.minecraft.entity.Entity;
@@ -76,6 +77,8 @@ public class DragonslayerSpear extends ItemSwordEpic{
 	
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player){
+		DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(player);
+		props.consumeSpell();
 		return par1ItemStack;
 	}
 	

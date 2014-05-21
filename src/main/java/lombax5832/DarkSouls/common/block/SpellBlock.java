@@ -35,10 +35,13 @@ public class SpellBlock extends Block{
 	            	
 	            	DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(player);
 	            	
-	            	if(player.isSneaking())
+	            	if(player.isSneaking()){
 	            		props.setHasSoulArrow(false);
-	            	else
+	            		props.setCurrentSoulArrow(0);
+	            	}else{
 	            		props.setHasSoulArrow(true);
+	            		props.setCurrentSoulArrow(props.getMaxSoulArrow());
+	            	}
 	            	
 	            }
 	            
