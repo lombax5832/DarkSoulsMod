@@ -1,6 +1,8 @@
 //Items
 item.darkSoulsAbyssSword.name=Abyss Greatsword
 item.darkSoulsDragonSlayerSpear.name=Dragonslayer Spear
+item.darkSoulsEstusFlask.name=Estus Flask
+item.darkSoulsEstusFlaskEmpty.name=Empty Estus Flask
 
 //Blocks
 tile.darkSoulsSpellBlock.name=Spell Block

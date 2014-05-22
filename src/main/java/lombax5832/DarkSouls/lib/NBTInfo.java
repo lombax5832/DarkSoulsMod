@@ -4,4 +4,5 @@ public class NBTInfo {
 	public final static String hasSoulArrow 	= "darkSoulsHasSoulArrow";
 	public final static String currentSoulArrow	= "darkSoulsCurrentSoulArrow";
 	public final static String maxSoulArrow 	= "darkSoulsMaxSoulArrow";
+	public final static String currentFlasks	= "darkSoulsCurrentFlasks";
 }

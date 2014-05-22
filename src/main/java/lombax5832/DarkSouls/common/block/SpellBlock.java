@@ -31,19 +31,23 @@ public class SpellBlock extends Block{
 	            this.thisy = y;
 	            this.thisz = z;
 	            
-	            if(world.isRemote){
+//	            if(world.isRemote){
 	            	
 	            	DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(player);
 	            	
 	            	if(player.isSneaking()){
 	            		props.setHasSoulArrow(false);
 	            		props.setCurrentSoulArrow(0);
+	            		props.setMaxFlasks(2);
+	            		props.replenishFlasks();
 	            	}else{
 	            		props.setHasSoulArrow(true);
 	            		props.setCurrentSoulArrow(props.getMaxSoulArrow());
+	            		props.setMaxFlasks(10);
+	            		props.replenishFlasks();
 	            	}
 	            	
-	            }
+//	            }
 	            
 	            return true;
 	    }

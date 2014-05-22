@@ -6,11 +6,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
 import lombax5832.DarkSouls.DarkSouls;
+import lombax5832.DarkSouls.common.item.ItemEstusFlask;
 import lombax5832.DarkSouls.lib.NBTInfo;
 import lombax5832.DarkSouls.network.PacketSyncProps;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.world.World;
@@ -22,10 +24,13 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	
 	private final EntityPlayer player;
 	
+	//Estus Flask
+	private int currentFlasks = 0;
+	private int maxFlasks = 10;
+	
+	//Soul Arrow
 	private boolean hasSoulArrow = false;
-	
 	private int currentSoulArrow = 0;
-	
 	private int maxSoulArrow = 10;
 	
 	public DarkSoulsExtendedPlayer(EntityPlayer player){
@@ -46,6 +51,7 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
 		
+		properties.setInteger(NBTInfo.currentFlasks, this.currentFlasks);
 		properties.setBoolean(NBTInfo.hasSoulArrow, this.hasSoulArrow);
 		properties.setInteger(NBTInfo.maxSoulArrow, this.maxSoulArrow);
 		properties.setInteger(NBTInfo.currentSoulArrow, this.currentSoulArrow);
@@ -57,6 +63,7 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 
+		this.currentFlasks = properties.getInteger(NBTInfo.currentFlasks);
 		this.hasSoulArrow = properties.getBoolean(NBTInfo.hasSoulArrow);
 		this.maxSoulArrow = properties.getInteger(NBTInfo.maxSoulArrow);
 		this.currentSoulArrow = properties.getInteger(NBTInfo.currentSoulArrow);
@@ -76,6 +83,12 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	
 	public final void sync(){
 		DarkSouls.packetPipeline.sendTo(new PacketSyncProps(player), (EntityPlayerMP) player);
+		ItemStack stack = null;
+		for(int i=0;i<36;i++){
+			stack = player.inventory.getStackInSlot(i);
+			if(stack!= null && stack.getItem() != null && stack.getItem() instanceof ItemEstusFlask){
+			}
+		}
 	}
 
 	
@@ -83,28 +96,48 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 		this.currentSoulArrow = this.maxSoulArrow;
 	}
 	
+	public void replenishFlasks(){
+		this.currentFlasks = this.maxFlasks;
+	}
+	
+	//Current Flasks
+	public int getMaxFlasks(){
+		return this.maxFlasks;
+	}
+	public void setMaxFlasks(int setting){
+		this.maxFlasks = setting;
+	}
+	
+	//Current Flasks
+	public int getCurrentFlasks(){
+		return this.currentFlasks;
+	}
+	public void setCurrentFlasks(int setting){
+		this.currentFlasks = setting;
+	}
+	
+	//Max Soul Arrow
 	public int getMaxSoulArrow(){
 		return this.maxSoulArrow;
 	}
-	
+	public void setMaxSoulArrow(int setting){
+		this.maxSoulArrow = setting;
+	}
+	//Current Soul Arrow
+	public void setCurrentSoulArrow(int setting){
+		this.currentSoulArrow = setting;
+	}
 	public int getCurrentSoulArrow(){
 		return this.currentSoulArrow;
 	}
-	
+	//Has Soul Arrow
 	public boolean getHasSoulArrow(){
 		return this.hasSoulArrow;
 	}
-	
 	public void setHasSoulArrow(boolean setting){
 		this.hasSoulArrow = setting;
 	}
 	
-	public void setCurrentSoulArrow(int setting){
-		this.currentSoulArrow = setting;
-	}
 	
-	public void setMaxSoulArrow(int setting){
-		this.maxSoulArrow = setting;
-	}
 
 }
