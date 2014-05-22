@@ -1,10 +1,13 @@
 package lombax5832.DarkSouls.common.block;
 
+import lombax5832.DarkSouls.common.item.ItemEstusFlaskShard;
+import lombax5832.DarkSouls.common.item.ModItems;
 import lombax5832.DarkSouls.common.player.DarkSoulsExtendedPlayer;
 import lombax5832.DarkSouls.creativetab.CreativeTabDarkSouls;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class SpellBlock extends Block{
@@ -34,18 +37,22 @@ public class SpellBlock extends Block{
 //	            if(world.isRemote){
 	            	
 	            	DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(player);
-	            	
+	            	if(player.getHeldItem()!=null&&player.getHeldItem().getItem() == ModItems.EstusFlaskShard){
+	            		ItemStack stack = player.getHeldItem();
+	            		props.addMaxFlasks(stack.stackSize);
+	            		System.out.println("Attempted to add "+stack.stackSize+" shards.");
+	            		stack.stackSize=0;
+	            	}
 	            	if(player.isSneaking()){
 	            		props.setHasSoulArrow(false);
 	            		props.setCurrentSoulArrow(0);
-	            		props.setMaxFlasks(2);
-	            		props.replenishFlasks();
+	            		props.setCurrentFlasks(1);
 	            	}else{
 	            		props.setHasSoulArrow(true);
 	            		props.setCurrentSoulArrow(props.getMaxSoulArrow());
-	            		props.setMaxFlasks(10);
 	            		props.replenishFlasks();
 	            	}
+	            	
 	            	
 //	            }
 	            

@@ -12,6 +12,7 @@ public class ModItems {
 	public static Item AbyssGreatSword;
 	public static Item DragonslayerSpear;
 	public static Item EstusFlask;
+	public static Item EstusFlaskShard;
 	
 	//ToolMaterials
 	public static ToolMaterial POWERWEAPONS_T1 = EnumHelper.addToolMaterial("POWERWEAONS_T1", 2, 400, 6.0F, 2.5F, 14);
@@ -26,5 +27,8 @@ public class ModItems {
 		
 		EstusFlask = new ItemEstusFlask().setUnlocalizedName(ItemNames.ESTUS_FLASK_NAME);
 		GameRegistry.registerItem(EstusFlask, ItemNames.ESTUS_FLASK_NAME);
+		
+		EstusFlaskShard = new ItemEstusFlaskShard().setTextureName(ModInfo.modid+":"+ItemNames.ESTUS_FLASK_SHARD_NAME).setUnlocalizedName(ItemNames.ESTUS_FLASK_SHARD_NAME);
+		GameRegistry.registerItem(EstusFlaskShard, ItemNames.ESTUS_FLASK_SHARD_NAME);
 	}
 }

@@ -25,8 +25,8 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	private final EntityPlayer player;
 	
 	//Estus Flask
-	private int currentFlasks = 0;
-	private int maxFlasks = 10;
+	private int currentFlasks = 1;
+	private int maxFlasks = 1;
 	
 	//Soul Arrow
 	private boolean hasSoulArrow = false;
@@ -51,7 +51,9 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
 		
+		properties.setInteger(NBTInfo.maxFlasks, this.maxFlasks);
 		properties.setInteger(NBTInfo.currentFlasks, this.currentFlasks);
+		
 		properties.setBoolean(NBTInfo.hasSoulArrow, this.hasSoulArrow);
 		properties.setInteger(NBTInfo.maxSoulArrow, this.maxSoulArrow);
 		properties.setInteger(NBTInfo.currentSoulArrow, this.currentSoulArrow);
@@ -62,8 +64,10 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-
+		
+		this.maxFlasks = properties.getInteger(NBTInfo.maxFlasks);
 		this.currentFlasks = properties.getInteger(NBTInfo.currentFlasks);
+		
 		this.hasSoulArrow = properties.getBoolean(NBTInfo.hasSoulArrow);
 		this.maxSoulArrow = properties.getInteger(NBTInfo.maxSoulArrow);
 		this.currentSoulArrow = properties.getInteger(NBTInfo.currentSoulArrow);
@@ -97,7 +101,7 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	}
 	
 	public void replenishFlasks(){
-		this.currentFlasks = this.maxFlasks;
+		this.setCurrentFlasks(this.getMaxFlasks());
 	}
 	
 	//Current Flasks
@@ -106,6 +110,9 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	}
 	public void setMaxFlasks(int setting){
 		this.maxFlasks = setting;
+	}
+	public void addMaxFlasks(int setting){
+		this.maxFlasks = Math.min(this.maxFlasks+setting, 64);
 	}
 	
 	//Current Flasks

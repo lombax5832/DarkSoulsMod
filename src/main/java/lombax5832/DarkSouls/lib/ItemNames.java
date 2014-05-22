@@ -8,4 +8,6 @@ public class ItemNames {
 	public static final String ESTUS_FLASK_NAME = "darkSoulsEstusFlask";
 	
 	public static final String ESTUS_FLASK_EMPTY_NAME = "darkSoulsEstusFlaskEmpty";
+	
+	public static final String ESTUS_FLASK_SHARD_NAME = "darkSoulsEstusFlaskShard";
 }
