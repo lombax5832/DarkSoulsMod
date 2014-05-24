@@ -11,16 +11,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class PlayerSpellsGUI extends Gui{
+public class DarkSoulsPlayerGUI extends Gui{
 	
 	private Minecraft mc;
 	
-	private static final ResourceLocation texturepath = new ResourceLocation(ModInfo.modid, "textures/gui/guiSoulArrow.png");
+	private static final ResourceLocation texturePathSoulArrow = new ResourceLocation(ModInfo.modid, "textures/gui/guiSoulArrow.png");
+	
+	private static final ResourceLocation texturePathSoulCounter = new ResourceLocation(ModInfo.modid, "textures/gui/guiSoulCounter.png");
 	
 	private FontRenderer fr;
 	
@@ -28,7 +31,9 @@ public class PlayerSpellsGUI extends Gui{
 	
 	private int height,width;
 	
-	public PlayerSpellsGUI(Minecraft mc){
+	private DarkSoulsExtendedPlayer props;
+	
+	public DarkSoulsPlayerGUI(Minecraft mc){
 		super();
 		this.mc=mc;
 	}
@@ -46,8 +51,44 @@ public class PlayerSpellsGUI extends Gui{
 		return;
 		}
 		
-		DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(this.mc.thePlayer);
+		props = DarkSoulsExtendedPlayer.get(this.mc.thePlayer);
 		
+//		renderSoulArrow();
+		renderSoulCounter();
+		
+	}
+	
+	public void renderSoulCounter(){
+		int xPos = (int) (width-115);
+		int yPos = (int) (height-25);
+		float scale = 1.7F;
+		
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		
+		
+		GL11.glPushMatrix();
+		GL11.glTranslatef(xPos, yPos, 0);
+		
+		GL11.glScalef(scale,scale,scale);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		this.mc.getTextureManager().bindTexture(texturePathSoulCounter);
+		this.drawTexturedModalRect(0, 0, 0, 0, 65, 65);
+		GL11.glTranslatef(0, 0, 1);
+		WriteString.shadowString(fr, StringUtils.leftPad(Integer.toString(props.getCurrentSouls()), 10, '0'), -1, -1, 0xFFFFFF);
+		if(props.soulQueueFrozen>0){
+			String toWrite = "+"+Integer.toString(props.soulQueueFrozen);
+			WriteString.shadowString(fr, toWrite, 59-fr.getStringWidth(toWrite), -13, 0xFFFFFF);
+		}
+		GL11.glScalef(1.0F, 1.0F, 1.0F);
+		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glPopMatrix();
+		
+	}
+	
+	public void renderSoulArrow(){
 		int xPos = (int) ((width/2)-70);
 		int yPos = (int) ((height)-95);
 		
@@ -73,11 +114,10 @@ public class PlayerSpellsGUI extends Gui{
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		this.mc.getTextureManager().bindTexture(texturepath);
+		this.mc.getTextureManager().bindTexture(texturePathSoulArrow);
 		this.drawTexturedModalRect(0, 0, 0, 0, 65, 65);
 		GL11.glScalef(1.0F, 1.0F, 1.0F);
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glPopMatrix();
-		
 	}
 }

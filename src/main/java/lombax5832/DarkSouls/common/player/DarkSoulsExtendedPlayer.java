@@ -24,6 +24,12 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	
 	private final EntityPlayer player;
 	
+	//Souls
+	private int currentSouls = 0;
+	public int soulQueue = 0;
+	public int soulQueueFrozen = 0;
+	public final int maxSouls = 9999999;
+	
 	//Estus Flask
 	private int currentFlasks = 1;
 	private int maxFlasks = 1;
@@ -50,10 +56,13 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
-		
+		//Souls
+		properties.setInteger(NBTInfo.currentSouls, this.currentSouls);
+		properties.setInteger(NBTInfo.soulQueue, this.soulQueue);
+		//Flasks
 		properties.setInteger(NBTInfo.maxFlasks, this.maxFlasks);
 		properties.setInteger(NBTInfo.currentFlasks, this.currentFlasks);
-		
+		//Soul Arrow
 		properties.setBoolean(NBTInfo.hasSoulArrow, this.hasSoulArrow);
 		properties.setInteger(NBTInfo.maxSoulArrow, this.maxSoulArrow);
 		properties.setInteger(NBTInfo.currentSoulArrow, this.currentSoulArrow);
@@ -64,10 +73,13 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-		
+		//Souls
+		this.currentSouls = properties.getInteger(NBTInfo.currentSouls);
+		this.soulQueue = properties.getInteger(NBTInfo.soulQueue);
+		//Flasks
 		this.maxFlasks = properties.getInteger(NBTInfo.maxFlasks);
 		this.currentFlasks = properties.getInteger(NBTInfo.currentFlasks);
-		
+		//Soul Arrow
 		this.hasSoulArrow = properties.getBoolean(NBTInfo.hasSoulArrow);
 		this.maxSoulArrow = properties.getInteger(NBTInfo.maxSoulArrow);
 		this.currentSoulArrow = properties.getInteger(NBTInfo.currentSoulArrow);
@@ -104,6 +116,20 @@ public class DarkSoulsExtendedPlayer implements IExtendedEntityProperties{
 		this.setCurrentFlasks(this.getMaxFlasks());
 	}
 	
+	//Souls
+	public int getCurrentSouls(){
+		return this.currentSouls;
+	}
+	public void setSouls(int setting){
+		this.currentSouls = Math.min(setting, this.maxSouls);
+	}
+	public void addSouls(int setting){
+		this.currentSouls = Math.min(setting+this.currentSouls,this.maxSouls);
+	}
+	public void addSoulsToQueue(int setting){
+		this.soulQueue = Math.min(this.soulQueue+setting,this.maxSouls-this.currentSouls);
+		this.soulQueueFrozen += setting;
+	}
 	//Current Flasks
 	public int getMaxFlasks(){
 		return this.maxFlasks;

@@ -49,10 +49,8 @@ public class ItemEstusFlask extends Item{
 		
 		if(props.getCurrentFlasks()>0){
 			player.addPotionEffect(new PotionEffect(Potion.regeneration.getId(), 25, 4));
-			player.addPotionEffect(new PotionEffect(Potion.hunger.getId(), 25, 4));
 			props.setCurrentFlasks(props.getCurrentFlasks()-1);
-			stack.stackSize = props.getCurrentFlasks();
-			System.out.println(props.getMaxFlasks()+" flasks left.");	
+			stack.stackSize = props.getCurrentFlasks();	
 		}
 		
 		if(props.getCurrentFlasks()==0){

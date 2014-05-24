@@ -1,12 +1,23 @@
 package lombax5832.DarkSouls.common.handler;
 
-import lombax5832.DarkSouls.common.item.ItemEstusFlask;
+import java.util.List;
+
+import lombax5832.DarkSouls.DarkSouls;
+import lombax5832.DarkSouls.common.entity.EntitySouls;
 import lombax5832.DarkSouls.common.item.ModItems;
 import lombax5832.DarkSouls.common.player.DarkSoulsExtendedPlayer;
+import lombax5832.DarkSouls.network.PacketSpawnSouls;
+import lombax5832.DarkSouls.util.RandomRange;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class DarkSoulsEventHandler {
@@ -34,6 +45,44 @@ public class DarkSoulsEventHandler {
 				stack.setItemDamage(1);
 				player.inventory.addItemStackToInventory(stack);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingEntityDeath(LivingDeathEvent event){
+		if(!event.entity.worldObj.isRemote&&event.source!=null){
+//			EntityPlayer sourcePlayer = (EntityPlayer) event.source.getEntity();
+			EntityLiving killedEntity = (EntityLiving) event.entity;
+			int toAdd = 0;
+			
+			if(event.entity instanceof EntitySkeleton){
+				EntitySkeleton entity = (EntitySkeleton) event.entity;
+				if(!(entity.dimension == -1))
+					toAdd = RandomRange.randomRange(200,400);
+				else
+					toAdd = RandomRange.randomRange(1500, 2000);
+			}else{
+				toAdd = RandomRange.randomRange(0,10);
+			}
+			
+			int homingRadius = 32;
+			
+			List<Entity> entityList = event.entity.worldObj.getEntitiesWithinAABBExcludingEntity(killedEntity, AxisAlignedBB.getBoundingBox(killedEntity.posX - homingRadius, killedEntity.posY - homingRadius,
+					killedEntity.posZ - homingRadius, killedEntity.posX + homingRadius, killedEntity.posY + homingRadius, killedEntity.posZ + homingRadius));
+			
+        	for(Entity e : entityList){
+        		if(e instanceof EntityPlayer){
+        			EntityPlayer player = (EntityPlayer) e;
+        			EntitySouls souls = new EntitySouls(player.worldObj, player, killedEntity.posX, killedEntity.posY, killedEntity.posZ);
+        			player.worldObj.spawnEntityInWorld(souls);
+//        			System.out.println("spawn attempted");
+//        			DarkSouls.packetPipeline.sendTo(new PacketSpawnSouls(killedEntity.posX,killedEntity.posY,killedEntity.posZ, souls), (EntityPlayerMP) player);
+//        			event.entity.worldObj.spawnEntityInWorld(new EntitySouls(player.worldObj, player, killedEntity.posX, killedEntity.posY, killedEntity.posZ));
+        			DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(player);
+        			props.addSoulsToQueue(toAdd);
+        			DarkSoulsExtendedPlayer.get(player).sync();
+        		}
+        	}
 		}
 	}
 }

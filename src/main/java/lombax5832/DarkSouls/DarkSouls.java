@@ -33,13 +33,14 @@ public class DarkSouls {
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event){
 		packetPipeline.initialize();
+		proxy.registerEventHandler();
 		proxy.registerRenderTickHandler();
+		proxy.registerEntities();
 	}
 	
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event){
 		packetPipeline.postInitialize();
-		proxy.registerEventHandler();
 	}
 
 }

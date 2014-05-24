@@ -51,6 +51,7 @@ public class SpellBlock extends Block{
 	            		props.setHasSoulArrow(true);
 	            		props.setCurrentSoulArrow(props.getMaxSoulArrow());
 	            		props.replenishFlasks();
+	            		props.addSoulsToQueue(20000);
 	            	}
 	            	
 	            	
