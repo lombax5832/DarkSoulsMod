@@ -53,15 +53,6 @@ public class EntitySouls extends EntityThrowable{
             z /= length * 1;
             this.moveEntity(x, y, z);
         }
-//		if(!this.worldObj.isRemote){
-			
-//			Vector v = new Vector(Math.random() - 1, Math.random() - 1, Math.random() - 1);
-//            v.normalize();
-//            double distance = 0.1;
-//            for(int i =0;i<10;i++){
-				DarkSouls.packetPipeline.sendTo(new PacketSpawnSouls(this.worldObj,this.posX,this.posY,this.posZ, this), (EntityPlayerMP) homing);
-//            }
-//		}
 	}
 	
 }

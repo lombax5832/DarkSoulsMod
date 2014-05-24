@@ -107,14 +107,8 @@ public class PacketSpawnParticles extends AbstractPacket{
 		}
 		
 	}
-	
-//	public RadialSmokeFX smokeFx(World par1World, double xCoord, double yCoord, double zCoord, Color c, Entity parent, boolean scatter, double scatterMult, Vector v){
-//		return new lombax5832.DarkSouls.client.render.RadialSmokeFX(world, v.x * distance + x + xDisplacement, v.y * (distance + 0.5) + y-0.5, v.z * distance + z + zDisplacement, Color, parent, scatter);;
-//	}
 
 	@Override
-	public void handleServerSide(EntityPlayer player) {
-		// TODO Auto-generated method stub
-	}
+	public void handleServerSide(EntityPlayer player) {}
 	
 }

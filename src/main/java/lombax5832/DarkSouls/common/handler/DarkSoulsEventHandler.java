@@ -50,7 +50,7 @@ public class DarkSoulsEventHandler {
 	
 	@SubscribeEvent
 	public void onLivingEntityDeath(LivingDeathEvent event){
-		if(!event.entity.worldObj.isRemote&&event.source!=null){
+		if(!event.entity.worldObj.isRemote&&event.source!=null&&!(event.entity instanceof EntityPlayer)){
 //			EntityPlayer sourcePlayer = (EntityPlayer) event.source.getEntity();
 			EntityLiving killedEntity = (EntityLiving) event.entity;
 			int toAdd = 0;
@@ -73,11 +73,8 @@ public class DarkSoulsEventHandler {
         	for(Entity e : entityList){
         		if(e instanceof EntityPlayer){
         			EntityPlayer player = (EntityPlayer) e;
-        			EntitySouls souls = new EntitySouls(player.worldObj, player, killedEntity.posX, killedEntity.posY, killedEntity.posZ);
-        			player.worldObj.spawnEntityInWorld(souls);
-//        			System.out.println("spawn attempted");
-//        			DarkSouls.packetPipeline.sendTo(new PacketSpawnSouls(killedEntity.posX,killedEntity.posY,killedEntity.posZ, souls), (EntityPlayerMP) player);
-//        			event.entity.worldObj.spawnEntityInWorld(new EntitySouls(player.worldObj, player, killedEntity.posX, killedEntity.posY, killedEntity.posZ));
+        			System.out.println("spawn attempted");
+        			DarkSouls.packetPipeline.sendTo(new PacketSpawnSouls(player.worldObj,killedEntity.posX,killedEntity.posY+(killedEntity.getEyeHeight()/2),killedEntity.posZ,Math.min(Math.max(toAdd/10,1),200)), (EntityPlayerMP) player);
         			DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(player);
         			props.addSoulsToQueue(toAdd);
         			DarkSoulsExtendedPlayer.get(player).sync();
