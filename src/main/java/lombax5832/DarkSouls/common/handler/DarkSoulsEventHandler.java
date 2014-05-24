@@ -3,17 +3,22 @@ package lombax5832.DarkSouls.common.handler;
 import java.util.List;
 
 import lombax5832.DarkSouls.DarkSouls;
-import lombax5832.DarkSouls.common.entity.EntitySouls;
 import lombax5832.DarkSouls.common.item.ModItems;
 import lombax5832.DarkSouls.common.player.DarkSoulsExtendedPlayer;
 import lombax5832.DarkSouls.network.PacketSpawnSouls;
 import lombax5832.DarkSouls.util.RandomRange;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.boss.EntityWither;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntitySpider;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -51,7 +56,6 @@ public class DarkSoulsEventHandler {
 	@SubscribeEvent
 	public void onLivingEntityDeath(LivingDeathEvent event){
 		if(!event.entity.worldObj.isRemote&&event.source!=null&&!(event.entity instanceof EntityPlayer)){
-//			EntityPlayer sourcePlayer = (EntityPlayer) event.source.getEntity();
 			EntityLiving killedEntity = (EntityLiving) event.entity;
 			int toAdd = 0;
 			
@@ -61,8 +65,22 @@ public class DarkSoulsEventHandler {
 					toAdd = RandomRange.randomRange(200,400);
 				else
 					toAdd = RandomRange.randomRange(1500, 2000);
+			}else if(event.entity instanceof EntityCreeper){
+				if(!(event.source.getEntity() == event.entity)){
+					toAdd = RandomRange.randomRange(500,1000);
+				}else{
+					toAdd = RandomRange.randomRange(50,100);
+				}
+			}else if(event.entity instanceof EntityZombie){
+				toAdd = RandomRange.randomRange(100,200);
+			}else if(event.entity instanceof EntitySpider){
+				toAdd = RandomRange.randomRange(200,300);
+			}else if(event.entity instanceof EntityEnderman){
+				toAdd = RandomRange.randomRange(3000, 3500);
+			}else if(event.entity instanceof EntityWither){
+				toAdd = RandomRange.randomRange(50000, 75000);
 			}else{
-				toAdd = RandomRange.randomRange(0,10);
+				toAdd = (int) RandomRange.randomRange(event.entityLiving.getMaxHealth()*20, event.entityLiving.getMaxHealth()*25);
 			}
 			
 			int homingRadius = 32;
@@ -73,13 +91,32 @@ public class DarkSoulsEventHandler {
         	for(Entity e : entityList){
         		if(e instanceof EntityPlayer){
         			EntityPlayer player = (EntityPlayer) e;
-        			System.out.println("spawn attempted");
         			DarkSouls.packetPipeline.sendTo(new PacketSpawnSouls(player.worldObj,killedEntity.posX,killedEntity.posY+(killedEntity.getEyeHeight()/2),killedEntity.posZ,Math.min(Math.max(toAdd/10,1),200)), (EntityPlayerMP) player);
         			DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get(player);
         			props.addSoulsToQueue(toAdd);
         			DarkSoulsExtendedPlayer.get(player).sync();
         		}
         	}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerDeath(LivingDeathEvent event){
+		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer){
+			NBTTagCompound playerData = new NBTTagCompound();
+			event.entity.getExtendedProperties(DarkSoulsExtendedPlayer.EXT_PROP_NAME).saveNBTData(playerData);
+			DarkSouls.proxy.storeEntityData(((EntityPlayer) event.entity).getDisplayName(), playerData);
+
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerJoin(EntityJoinWorldEvent event){
+		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer){
+			NBTTagCompound playerData = DarkSouls.proxy.getEntityData(((EntityPlayer) event.entity).getDisplayName());
+			if (playerData != null) {
+				event.entity.getExtendedProperties(DarkSoulsExtendedPlayer.EXT_PROP_NAME).loadNBTData(playerData);
+			}
 		}
 	}
 }
