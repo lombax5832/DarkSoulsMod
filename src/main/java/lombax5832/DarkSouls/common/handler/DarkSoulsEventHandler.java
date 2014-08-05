@@ -3,8 +3,10 @@ package lombax5832.DarkSouls.common.handler;
 import java.util.List;
 
 import lombax5832.DarkSouls.DarkSouls;
+import lombax5832.DarkSouls.common.block.ModBlocks;
 import lombax5832.DarkSouls.common.item.ModItems;
 import lombax5832.DarkSouls.common.player.DarkSoulsExtendedPlayer;
+import lombax5832.DarkSouls.common.tileentity.TileEntityBloodstain;
 import lombax5832.DarkSouls.network.PacketSpawnSouls;
 import lombax5832.DarkSouls.util.RandomRange;
 import net.minecraft.entity.Entity;
@@ -103,10 +105,24 @@ public class DarkSoulsEventHandler {
 	@SubscribeEvent
 	public void onPlayerDeath(LivingDeathEvent event){
 		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer){
+			
+			DarkSoulsExtendedPlayer props = DarkSoulsExtendedPlayer.get((EntityPlayer) event.entity);
+			long toBloodStain = props.getCurrentSouls();
+			props.setSouls(0);
 			NBTTagCompound playerData = new NBTTagCompound();
 			event.entity.getExtendedProperties(DarkSoulsExtendedPlayer.EXT_PROP_NAME).saveNBTData(playerData);
 			DarkSouls.proxy.storeEntityData(((EntityPlayer) event.entity).getDisplayName(), playerData);
 
+			int x = (int)event.entity.posX;
+			int y = (int)event.entity.posY;
+			int z = (int)event.entity.posZ;
+			
+			while(!event.entity.worldObj.isAirBlock(x, y, z)){
+				y++;
+			}
+			event.entity.worldObj.setBlock(x, y, z, ModBlocks.BlockBloodstain);
+			((TileEntityBloodstain)event.entity.worldObj.getTileEntity(x, y, z)).init((EntityPlayer) event.entity, toBloodStain);
+			DarkSoulsExtendedPlayer.get((EntityPlayer) event.entity).sync();
 		}
 	}
 	

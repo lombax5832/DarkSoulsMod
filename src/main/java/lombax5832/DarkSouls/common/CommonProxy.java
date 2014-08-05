@@ -7,11 +7,14 @@ import lombax5832.DarkSouls.DarkSouls;
 import lombax5832.DarkSouls.common.entity.EntitySouls;
 import lombax5832.DarkSouls.common.handler.DarkSoulsEventHandler;
 import lombax5832.DarkSouls.common.handler.DarkSoulsTickHandler;
+import lombax5832.DarkSouls.common.tileentity.TileEntityBloodstain;
 import lombax5832.DarkSouls.lib.EntityInfo;
+import lombax5832.DarkSouls.lib.ModInfo;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy {
 	
@@ -31,6 +34,10 @@ public class CommonProxy {
 	
 	public void registerEntities(){
 		EntityRegistry.registerModEntity(EntitySouls.class, EntityInfo.entitySouls, 1, DarkSouls.instance, 64, 10, false);
+	}
+	
+	public void registerTileEntities(){
+		GameRegistry.registerTileEntity(TileEntityBloodstain.class, ModInfo.modid+":tileEntityBloodstain");
 	}
 	
 	public static void storeEntityData(String name, NBTTagCompound compound)

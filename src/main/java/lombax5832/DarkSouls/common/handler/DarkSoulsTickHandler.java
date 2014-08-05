@@ -8,11 +8,6 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 public class DarkSoulsTickHandler {
-
-	public DarkSoulsTickHandler() {
-		
-	}
-
 	
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event){

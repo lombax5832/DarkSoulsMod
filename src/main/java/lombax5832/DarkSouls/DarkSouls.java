@@ -36,6 +36,7 @@ public class DarkSouls {
 		proxy.registerEventHandler();
 		proxy.registerRenderTickHandler();
 		proxy.registerEntities();
+		proxy.registerTileEntities();
 	}
 	
 	@Mod.EventHandler

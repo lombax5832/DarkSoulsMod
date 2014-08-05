@@ -77,9 +77,9 @@ public class DarkSoulsPlayerGUI extends Gui{
 		this.mc.getTextureManager().bindTexture(texturePathSoulCounter);
 		this.drawTexturedModalRect(0, 0, 0, 0, 65, 65);
 		GL11.glTranslatef(0, 0, 1);
-		WriteString.shadowString(fr, StringUtils.leftPad(Integer.toString(props.getCurrentSouls()), 10, '0'), -1, -1, 0xFFFFFF);
+		WriteString.shadowString(fr, StringUtils.leftPad(Long.toString(props.getCurrentSouls()), 10, '0'), -1, -1, 0xFFFFFF);
 		if(props.soulQueueFrozen>0){
-			String toWrite = "+"+Integer.toString(props.soulQueueFrozen);
+			String toWrite = "+"+Long.toString(props.soulQueueFrozen);
 			WriteString.shadowString(fr, toWrite, 59-fr.getStringWidth(toWrite), -13, 0xFFFFFF);
 		}
 		GL11.glScalef(1.0F, 1.0F, 1.0F);
